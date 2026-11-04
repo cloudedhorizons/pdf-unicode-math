@@ -19,5 +19,17 @@ All options are in key=value format.
  - `keep`: Keep the current (text mode) definition.
  - `override`: Override the current definition and set to math mode.
  - `multidef`: Keep the current definition in text mode, but change the definition in math mode (Under the hood: sets it to `\ifmmode newdef\else olddef\fi`).
+ - `scr` (boolean, default `false`): Make calligraphic unicode characters expand to `\mathscr` rather than (default) `\mathcal`.
+ - `cal` (boolean, default `true`); The inverse of `scr`.
 - `verbose` (bool, default `false`): output detailed logs of character definitions. Useful for debugging.
 - `Greek` (bool, default `false`): Define upright greek letters as their nearest latin equivalent.
+
+## Future improvements
+- Add options for disabling certain sections of an alphabet if the font doesn't support it (e.g. relatively few blackboard bold fonts support lowercase) 
+ - Try to detect this automatically?
+- Add options for changing the font name used for declaring alphabetic characters
+ - Can currently work around by defining an alias
+- Add options for handling duplicate characters within the unicode-math list itself
+ - At present, the package always uses the first definition.
+ - This mostly affects accents with 'wide versions'; the 'wide version' is first.
+ - Also affected is `\sqrt` (first) and `\surd`.
