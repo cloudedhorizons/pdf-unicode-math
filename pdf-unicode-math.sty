@@ -5,6 +5,7 @@
 \bool_new:N \g_pum_textoverride_bool
 \bool_new:N \g_pum_textmultidef_bool
 \bool_new:N \g_pum_verbose_bool
+\bool_new:N \g_pum_scr_bool
 
 \bool_gset_true:N \g_pum_textoverride_bool
 \bool_gset_true:N \g_pum_textmultidef_bool
@@ -20,6 +21,8 @@
 	textcommands / multidef .code:n = {\bool_gset_true:N \g_pum_textoverride_bool
 		\bool_gset_true:N \g_pum_textmultidef_bool},
 	verbose.bool_set:N = \g_pum_verbose_bool
+	scr.bool_set:N = \g_pum_scr_bool,
+	cal.bool_set_inv:erseN = \g_pum_cal_bool
 }
 
 
@@ -127,7 +130,6 @@
 \pum_declare_alphabet:nNn {mup}{\mathit}{greek}
 \pum_declare_alphabet:nNn {mup}{\mathrm}{Greek}
 \pum_declare_alphabet:nNn {mit}{\mathit}{latin,Latin,greek,Greek}
-\pum_declare_alphabet:nNn {mscr}{\mathscr}{latin,Latin}
 \pum_declare_alphabet:nNn {mfrak}{\mathfrak}{latin,Latin}
 
 \cs_set_eq:NN \Bbbk_copy: \Bbbk
@@ -141,10 +143,17 @@
 \pum_declare_alphabet:nNn {mtt}{\mathtt}{latin,Latin,num}
 \pum_declare_alphabet:nNn {mbf}{\mathbf}{latin,Latin,greek,Greek,num}
 \pum_declare_alphabet:nNn {mbfit}{\mathbfit}{latin,Latin,greek,Greek}
-\pum_declare_alphabet:nNn {mbfscr}{\mathbfscr}{latin,Latin}
 \pum_declare_alphabet:nNn {mbffrak}{\mathbffrak}{latin,Latin}
 \pum_declare_alphabet:nNn {mbfsans}{\mathbfsf}{latin,Latin,greek,Greek,num}
 \pum_declare_alphabet:nNn {mbfitsans}{\mathbfsfit}{latin,Latin,greek,Greek,num}
+
+\bool_if:NTF \g_pum_scr_bool {
+	\pum_declare_alphabet:nNn {mscr}{\mathscr}{latin,Latin}
+	\pum_declare_alphabet:nNn {mbfscr}{\mathbfscr}{latin,Latin}
+} {
+	\pum_declare_alphabet:nNn {mscr}{\mathcal}{latin,Latin}
+	\pum_declare_alphabet:nNn {mbfscr}{\mathbfcal}{latin,Latin}
+}
 
 
 \cs_new_eq:NN\Planckconst\mith
