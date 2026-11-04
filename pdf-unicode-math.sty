@@ -1,5 +1,3 @@
-%!TEX root=pdf-unicode-math-test.tex
-% !TEX program=pdflatex
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesExplPackage{pdf-unicode-math}{2026/11/02}{1.0}{Declare unicode characters in math for pdflatex}
 
@@ -9,8 +7,7 @@
 \bool_gset_true:N \g_pum_textoverride_bool
 \bool_gset_true:N \g_pum_textmultidef_bool
 
-%
-%
+
 \keys_define:nn {pdf-unicode-math} {
 	Greek .bool_set:N = \g_pum_Greek_bool,
 	textcommands .choice:,
