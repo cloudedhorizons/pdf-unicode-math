@@ -33,3 +33,5 @@ All options are in key=value format.
  - At present, the package always uses the first definition.
  - This mostly affects accents with 'wide versions'; the 'wide version' is first.
  - Also affected is `\sqrt` (first) and `\surd`.
+- Make an actual package doc rather than sticking everything in the readme (dtx?).
+- add support for unicode subscripts and superscripts (preferably, add a handler for multiple in a row like unicode-math)
