@@ -20,9 +20,9 @@
 		\bool_gset_false:N \g_pum_textmultidef_bool},
 	textcommands / multidef .code:n = {\bool_gset_true:N \g_pum_textoverride_bool
 		\bool_gset_true:N \g_pum_textmultidef_bool},
-	verbose.bool_set:N = \g_pum_verbose_bool
+	verbose.bool_set:N = \g_pum_verbose_bool,
 	scr.bool_set:N = \g_pum_scr_bool,
-	cal.bool_set_inv:erseN = \g_pum_cal_bool
+	cal.bool_set_inverse:N = \g_pum_cal_bool,
 }
 
 
@@ -30,12 +30,12 @@
 
 \bool_if:NT \g_pum_verbose_bool {\msg_redirect_module:nnn {pdf-unicode-math}{none}{log}}
 
-\msg_new:nnn {pdf-unicode-math} {defining} {PUM: ~ Defining ~ U+\hex_strip:w #1 ~ as ~ #2.}
-\msg_new:nnn {pdf-unicode-math} {csundefined} {PUM: ~ #2 ~ is ~ undefined; ~ skipping ~ U+\hex_strip:w #1. }
-\msg_new:nnn {pdf-unicode-math} {defined-overriding} {PUM: ~ U+\hex_strip:w #1 ~ is ~ already defined; ~ overriding ~ to ~ #2.}
-\msg_new:nnn {pdf-unicode-math} {defined-multiple} {PUM: ~ U+\hex_strip:w #1 ~ is ~ already defined; ~ giving ~ secondary ~ definition ~ #2.}
-\msg_new:nnn {pdf-unicode-math} {defined-skipping} {PUM: ~ U+\hex_strip:w #1 ~ is ~ already ~ defined; ~ skipping #2.}
-\msg_new:nnn {pdf-unicode-math} {redundant}{PUM: Skipping ~ redundant ~ definition ~ #2 ~ for ~ U+\hex_strip:w #1.}
+\msg_new:nnn {pdf-unicode-math} {defining} {PUM: ~ Defining ~ U+\pum_hex_strip:w #1 ~ as ~ #2.}
+\msg_new:nnn {pdf-unicode-math} {csundefined} {PUM: ~ #2 ~ is ~ undefined; ~ skipping ~ U+\pum_hex_strip:w #1. }
+\msg_new:nnn {pdf-unicode-math} {defined-overriding} {PUM: ~ U+\pum_hex_strip:w #1 ~ is ~ already defined; ~ overriding ~ to ~ #2.}
+\msg_new:nnn {pdf-unicode-math} {defined-multiple} {PUM: ~ U+\pum_hex_strip:w #1 ~ is ~ already defined; ~ giving ~ secondary ~ definition ~ #2.}
+\msg_new:nnn {pdf-unicode-math} {defined-skipping} {PUM: ~ U+\pum_hex_strip:w #1 ~ is ~ already ~ defined; ~ skipping #2.}
+\msg_new:nnn {pdf-unicode-math} {redundant}{PUM: Skipping ~ redundant ~ definition ~ #2 ~ for ~ U+\pum_hex_strip:w #1.}
 
 
 
@@ -67,20 +67,20 @@
 }
 
 \bool_if:NT \g_pum_Greek_bool {
-	\cs_new:Npn\omicron{o}
-	\cs_new:Npn\Alpha{A}
-	\cs_new:Npn\Beta{B}
-	\cs_new:Npn\Epsilon{E}
-	\cs_new:Npn\Zeta{Z}
-	\cs_new:Npn\Eta{H}
-	\cs_new:Npn\Iota{I}
-	\cs_new:Npn\Kappa{K}
-	\cs_new:Npn\Mu{M}
-	\cs_new:Npn\Nu{N}
-	\cs_new:Npn\Omicron{O}
-	\cs_new:Npn\Rho{P}
-	\cs_new:Npn\Tau{T}
-	\cs_new:Npn\Chi{X}
+	\providecommand*\omicron{o}
+	\providecommand*\Alpha{A}
+	\providecommand*\Beta{B}
+	\providecommand*\Epsilon{E}
+	\providecommand*\Zeta{Z}
+	\providecommand*\Eta{H}
+	\providecommand*\Iota{I}
+	\providecommand*\Kappa{K}
+	\providecommand*\Mu{M}
+	\providecommand*\Nu{N}
+	\providecommand*\Omicron{O}
+	\providecommand*\Rho{P}
+	\providecommand*\Tau{T}
+	\providecommand*\Chi{X}
 }
 \cs_new_eq:NN\updigamma\digamma
 
@@ -96,32 +96,32 @@
 	\cs_if_exist:NT #2 {
 		\clist_if_in:nnT {#3}{latin} {
 			\seq_map_inline:Nn \c_pum_latin_seq {
-				\cs_new_nopar:cpn {#1 ##1} {#2 {##1}}
+				\exp_args:NNc \providecommand* {#1 ##1} {#2 {##1}}
 			}
 		}
 		\clist_if_in:nnT {#3}{Latin} {
 			\seq_map_inline:Nn \c_pum_Latin_seq {
-				\cs_new_nopar:cpn {#1 ##1} {#2 {##1}}
+				\exp_args:NNc \providecommand* {#1 ##1} {#2 {##1}}
 			}
 		}
 		\clist_if_in:nnT {#3}{greek} {
 			\seq_map_inline:Nn \c_pum_greek_seq {
 				\cs_if_exist:cT {##1} {
-					\cs_new_nopar:cpn {#1 ##1} {#2 {\cs:w ##1\cs_end:}}
+					\exp_args:NNc \providecommand* {#1 ##1} {#2 {\cs:w ##1\cs_end:}}
 				}
 			}
 		}
 		\clist_if_in:nnT {#3}{Greek} {
 			\seq_map_inline:Nn \c_pum_Greek_seq {
 				\cs_if_exist:cT {##1} {
-					\cs_new_nopar:cpn {#1 ##1} {#2 {\cs:w ##1\cs_end:}}
+					\exp_args:NNc \providecommand* {#1 ##1} {#2 {\cs:w ##1\cs_end:}}
 				}
 			}
 		}
 		\clist_if_in:nnT {#3}{num} {
 			\cs_new:cpn {#1 zero} {#2 {0}}
 			\seq_map_indexed_inline:Nn \c_pum_numbers_seq {
-				\cs_new_nopar:cpn {#1 ##2} {#2 {##1}}
+				\exp_args:NNc \providecommand* {#1 ##2} {#2 {##1}}
 			}
 		}
 	}
@@ -131,13 +131,7 @@
 \pum_declare_alphabet:nNn {mup}{\mathrm}{Greek}
 \pum_declare_alphabet:nNn {mit}{\mathit}{latin,Latin,greek,Greek}
 \pum_declare_alphabet:nNn {mfrak}{\mathfrak}{latin,Latin}
-
-\cs_set_eq:NN \Bbbk_copy: \Bbbk
-\cs_undefine:N \BBbk
 \pum_declare_alphabet:nNn {Bbb}{\mathbb}{latin,Latin,num}
-\cs_set_eq:NN \Bbbk \Bbbk_copy:
-\cs_undefine:N \BBbk_copy:
-
 \pum_declare_alphabet:nNn {msans}{\mathsf}{latin,Latin,num}
 \pum_declare_alphabet:nNn {mitsans}{\mathsfit}{latin,Latin}
 \pum_declare_alphabet:nNn {mtt}{\mathtt}{latin,Latin,num}
@@ -156,17 +150,18 @@
 }
 
 
-\cs_new_eq:NN\Planckconst\mith
-\cs_new:Npn\Bbbpi{\mathbb{\pi}}
-\cs_new:Npn\Bbbgamma{\mathbb{\gamma}}
-\cs_new:Npn\BbbPi{\mathbb{\Pi}}
-\cs_new:Npn\BbbGamma{\mathbb{\Gamma}}
-\cs_new_eq:NN\minus-
-\cs_new:Npn\cuberoot{\sqrt[3]}
-\cs_new:Npn\fourthroot{\sqrt[4]}
-\cs_new_eq:NN\mathratio :
+\providecommand*\Planckconst{\mith}
+\providecommand*\Eulerconst{\mscrE}
+\providecommand*\Bbbpi{\mathbb{\pi}}
+\providecommand*\Bbbgamma{\mathbb{\gamma}}
+\providecommand*\BbbPi{\mathbb{\Pi}}
+\providecommand*\BbbGamma{\mathbb{\Gamma}}
+\providecommand*\minus{-}
+\providecommand*\cuberoot{\sqrt[3]}
+\providecommand*\fourthroot{\sqrt[4]}
+\providecommand*\mathratio{:}
 
-\cs_new:Npn \hex_strip:w"{}
+\cs_new:Npn \pum_hex_strip:w"{}
 \seq_new:N \g_pum_definedcodepoints_seq
 
 \cs_new:Npn \UnicodeMathSymbol #1#2#3#4 {
@@ -197,5 +192,4 @@
 		} {\msg_none:nnnn{pdf-unicode-math}{csundefined}{#1}{#2}}
 	}
 }
-\errorcontextlines=10
 \input{unicode-math-table.tex}
