@@ -1,0 +1,192 @@
+%!TEX root=pdf-unicode-math-test.tex
+% !TEX program=pdflatex
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesExplPackage{pdf-unicode-math}{2026/11/02}{1.0}{Declare unicode characters in math for pdflatex}
+
+
+\bool_new:N \g_pum_textoverride_bool
+\bool_new:N \g_pum_textmultidef_bool
+\bool_gset_true:N \g_pum_textoverride_bool
+\bool_gset_true:N \g_pum_textmultidef_bool
+
+%
+%
+\keys_define:nn {pdf-unicode-math} {
+	Greek .bool_set:N = \g_pum_Greek_bool,
+	textcommands .choice:,
+	textcommands / none .code:n = {\bool_gset_false:N \g_pum_textoverride_bool},
+	textcommands / override .code:n = {\bool_gset_true:N \g_pum_textoverride_bool
+		\bool_gset_false:N \g_pum_textmultidef_bool},
+	textcommands / multidef .code:n = {\bool_gset_true:N \g_pum_textoverride_bool
+		\bool_gset_true:N \g_pum_textmultidef_bool}
+	
+}
+
+\ProcessKeyOptions[pdf-unicode-math]
+
+\msg_new:nnn {pdf-unicode-math} {defining} {PUM: ~ Defining ~ U+\hex_strip:w #1 ~ as ~ #2.}
+\msg_new:nnn {pdf-unicode-math} {csundefined} {PUM: ~ #2 ~ is ~ undefined; ~ skipping ~ U+\hex_strip:w #1. }
+\msg_new:nnn {pdf-unicode-math} {defined-overriding} {PUM: ~ U+\hex_strip:w #1 ~ is ~ already defined; ~ overriding ~ to ~ #2.}
+\msg_new:nnn {pdf-unicode-math} {defined-multiple} {PUM: ~ U+\hex_strip:w #1 ~ is ~ already defined; ~ giving ~ secondary ~ definition ~ #2.}
+\msg_new:nnn {pdf-unicode-math} {defined-skipping} {PUM: ~ U+\hex_strip:w #1 ~ is ~ already ~ defined; ~ skipping #2.}
+\msg_new:nnn {pdf-unicode-math} {redundant}{PUM: Skipping ~ redundant ~ definition ~ #2 ~ for ~ U+\hex_strip:w #1.}
+
+
+
+\cs_new:Npn \pum_if_defined_unicode:nTF#1#2#3{
+	\cs_if_exist:cTF{u8: \codepoint_str_generate:n{#1}}{#2}{#3}
+}
+
+\cs_new:Npn \pum_meaning_codepoint:n #1 {
+	\cs_meaning:c {u8: \codepoint_str_generate:n{#1}}
+}
+
+\cs_new_eq:NN \MeaningCodepoint \pum_meaning_codepoint:n
+
+
+\cs_new:Npn \pum_meaning_char:n #1 {
+	\cs_meaning:c {u8: \tl_to_str:n{#1}}
+}
+
+\cs_new_eq:NN \MeaningChar \pum_meaning_char:n
+
+
+\cs_new:Npn \pum_redefine:nn #1 #2 {
+	\tl_set:Nv \l_tmpa_tl {u8 : \codepoint_str_generate:n{#1}}
+	\cs_gset_nopar:cpe{u8 : \codepoint_str_generate:n{#1}}{\exp_not:N\ifmmode \exp_not:n {#2} \exp_not:N\else \exp_not:V \l_tmpa_tl \exp_not:N\fi}
+}
+
+\cs_new:Npn \pum_define:nn #1 #2 {
+	\cs_gset_nopar:cpn{u8 : \codepoint_str_generate:n{#1}}{#2}
+}
+
+
+\cs_new:Npn\omicron{o}
+\cs_new:Npn\Alpha{A}
+\cs_new:Npn\Beta{B}
+\cs_new:Npn\Epsilon{E}
+\cs_new:Npn\Zeta{Z}
+\cs_new:Npn\Eta{H}
+\cs_new:Npn\Iota{I}
+\cs_new:Npn\Kappa{K}
+\cs_new:Npn\Mu{M}
+\cs_new:Npn\Nu{N}
+\cs_new:Npn\Omicron{O}
+\cs_new:Npn\Rho{P}
+\cs_new:Npn\Tau{T}
+\cs_new:Npn\Chi{X}
+\cs_new_eq:NN\updigamma\digamma
+
+\seq_const_from_clist:Nn \c_pum_latin_seq {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}
+\seq_const_from_clist:Nn \c_pum_Latin_seq {A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+\seq_const_from_clist:Nn \c_pum_greek_seq {alpha,beta,gamma,delta,epsilon,varepsilon,zeta,eta,theta,vartheta,iota,kappa,varkappa,lambda,mu,nu,xi,omicron,pi,varpi,rho,varrho,sigma,varsigma,tau,upsilon,phi,varphi,chi,psi,omega,partial,digamma,nabla}
+\seq_const_from_clist:Nn \c_pum_Greek_seq {Alpha,Beta,Gamma,Delta,Epsilon,Zeta,Eta,Theta,Iota,Kappa,Lambda,Mu,Nu,Xi,Omicron,Pi,Rho,Sigma,Tau,Upsilon,Phi,Chi,Psi,Omega}
+
+\seq_const_from_clist:Nn \c_pum_numbers_seq {one,two,three,four,five,six,seven,eight,nine}
+
+\cs_new:Npn \pum_declare_latin:nN #1#2{
+	\seq_map_inline:Nn \c_pum_latin_seq {
+		\cs_new:cpn {#1 ##1} {#2 {##1}}
+	}
+	\seq_map_inline:Nn \c_pum_Latin_seq {
+		\cs_new:cpn {#1 ##1} {#2 {##1}}
+	}
+}
+
+\cs_new:Npn \pum_declare_greek:nN #1#2{
+	\seq_map_inline:Nn \c_pum_greek_seq {
+		\cs_new:cpn {#1 ##1} {#2 {\cs:w ##1\cs_end:}}
+	}
+}
+\cs_new:Npn \pum_declare_Greek:nN #1#2{
+	\seq_map_inline:Nn \c_pum_Greek_seq {
+		\cs_new:cpn {#1 ##1} {#2 {\cs:w ##1\cs_end:}}
+	}
+}
+
+\cs_new:Npn \pum_declare_numbers:nN #1 #2 {
+	\cs_new:cpn {#1 zero} {#2 {0}}
+	\seq_map_indexed_inline:Nn \c_pum_numbers_seq {\cs_new:cpn {#1 ##2} {#2 {##1}}}
+}
+
+\cs_new:Npn \pum_declare_all:nN#1#2{
+	\pum_declare_latin:nN {#1}{#2}
+	\pum_declare_greek:nN {#1}{#2}
+	\pum_declare_Greek:nN {#1}{#2}
+}
+
+
+\pum_declare_greek:nN {mup}{\mathit}
+\pum_declare_Greek:nN {mup}{\mathrm}
+
+\pum_declare_latin:nN {mit}{\mathit}
+\pum_declare_greek:nN {mit}{\mathit}
+\pum_declare_Greek:nN {mit}{\mathit}
+
+\pum_declare_latin:nN {mscr}{\mathcal}
+\pum_declare_latin:nN {mfrak}{\mathfrak}
+\let\Bbbkcopy\Bbbk
+\let\Bbbk\relax
+\pum_declare_latin:nN {Bbb}{\mathbb}
+\pum_declare_numbers:nN {Bbb}{\mathbb}
+\let\Bbbk\Bbbkcopy
+\pum_declare_latin:nN {msans}{\mathsf}
+\pum_declare_numbers:nN {msans}{\mathsf}
+\pum_declare_latin:nN {mitsans}{\mathsfit}
+\pum_declare_latin:nN {mtt}{\mathtt}
+\pum_declare_numbers:nN {mtt}{\mathtt}
+
+\pum_declare_all:nN {mbf}{\mathbf}
+\pum_declare_numbers:nN{mbf}{\mathbf}
+\pum_declare_all:nN {mbfit}{\mathbfit}
+
+\pum_declare_latin:nN {mbfscr}{\mathbfscr}
+\pum_declare_latin:nN {mbffrak}{\mathbffrak}
+
+\pum_declare_all:nN {mbfsans}{\mathbfsf}
+\pum_declare_numbers:nN {mbfsans}{\mathbfsf}
+\pum_declare_all:nN {mbfitsans}{\mathbfsfit}
+
+\cs_new_eq:NN\Planckconst\mith
+\cs_new:Npn\Bbbpi{\mathbb{\pi}}
+\cs_new:Npn\Bbbgamma{\mathbb{\gamma}}
+\cs_new:Npn\BbbPi{\mathbb{\Pi}}
+\cs_new:Npn\BbbGamma{\mathbb{\Gamma}}
+\cs_new_eq:NN\minus-
+\cs_new:Npn\cuberoot{\sqrt[3]}
+\cs_new:Npn\fourthroot{\sqrt[4]}
+\cs_new_eq:NN\mathratio :
+
+\cs_new:Npn \hex_strip:w"{}
+\seq_new:N \g_pum_definedcodepoints_seq
+
+\cs_new:Npn \UnicodeMathSymbol #1#2#3#4 {
+	\int_compare:nNnT {#1} > {"7F} {
+		\cs_if_exist:NTF #2 {
+			\pum_if_defined_unicode:nTF {#1} {
+				\seq_if_in:NnTF \g_pum_definedcodepoints_seq {#1} {
+					\msg_log:nnnn {pdf-unicode-math}{redundant}{#1}{#2}
+				}{
+					\seq_gpush:Nn \g_pum_definedcodepoints_seq {#1}
+					\bool_if:NTF \g_pum_textoverride_bool {
+						\bool_if:NTF \g_pum_textmultidef_bool {
+							\msg_log:nnnn {pdf-unicode-math}{defined-multiple}{#1}{#2}
+							\pum_redefine:nn {#1}{#2}
+						} {
+							\msg_log:nnnn {pdf-unicode-math}{defined-overriding}{#1}{#2}
+							\pum_define:nn {#1}{#2}
+						}
+					} {
+						\msg_log:nnnn {pdf-unicode-math}{defined-skipping}{#1}{#2}
+					}
+				}
+			} {
+				\seq_gpush:Nn \g_pum_definedcodepoints_seq {#1}
+				\msg_log:nnnn {pdf-unicode-math}{defining}{#1}{#2}
+				\pum_define:nn {#1} {#2}
+			}
+		} {\msg_log:nnnn{pdf-unicode-math}{csundefined}{#1}{#2}}
+	}
+}
+\errorcontextlines=10
+\input{unicode-math-table.tex}
