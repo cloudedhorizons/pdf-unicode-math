@@ -15,3 +15,10 @@ The main idea is to take the existing [symbol table](https://texdoc.org/serve/un
 
 ## Package Options
 All options are in key=value format.
+- `textcommands` (choice, default `multidef`): Control what happens to unicode characters currently set to text-mode commands.
+ - `keep`: Keep the current (text mode) definition.
+ - `override`: Override the current definition and set to math mode.
+ - `multidef`: Keep the current definition in text mode, but change the definition in math mode (Under the hood: sets it to `\ifmmode newdef\else olddef\fi`).
+- `verbose` (bool, default `false`): output detailed logs of character definitions. Useful for debugging.
+- `Greek` (bool, default `false`): Define upright greek letters as their nearest latin equivalent.
+- And as well,
