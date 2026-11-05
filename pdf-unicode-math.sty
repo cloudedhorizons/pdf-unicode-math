@@ -151,16 +151,17 @@
 	\pum_declare_alphabet:nNn {mbfscr}{\mathbfcal}{latin,Latin}
 }
 
-
 \providecommand*\Planckconst{\mith}
-\providecommand*\Bbbpi{\mathbb{\pi}}
-\providecommand*\Bbbgamma{\mathbb{\gamma}}
-\providecommand*\BbbPi{\mathbb{\Pi}}
-\providecommand*\BbbGamma{\mathbb{\Gamma}}
-\providecommand*\minus{-}
-\providecommand*\cuberoot{\sqrt[3]}
-\providecommand*\fourthroot{\sqrt[4]}
-\providecommand*\mathratio{:}
+\bool_if:NTF \g_pum_bonus_bool {
+	\providecommand*\Bbbpi{\mathbb{\pi}}
+	\providecommand*\Bbbgamma{\mathbb{\gamma}}
+	\providecommand*\BbbPi{\mathbb{\Pi}}
+	\providecommand*\BbbGamma{\mathbb{\Gamma}}
+	\providecommand*\minus{-}
+	\providecommand*\cuberoot{\sqrt[3]}
+	\providecommand*\fourthroot{\sqrt[4]}
+	\providecommand*\mathratio{:}
+}
 
 \cs_new:Npn \pum_hex_strip:w"{}
 \seq_new:N \g_pum_definedcodepoints_seq
