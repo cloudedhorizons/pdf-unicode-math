@@ -23,6 +23,7 @@ All options are in key=value format.
  - `cal` (boolean, default `true`); The inverse of `scr`.
 - `verbose` (bool, default `false`): output detailed logs of character definitions. Useful for debugging.
 - `Greek` (bool, default `false`): Define upright greek letters as their nearest latin equivalent.
+- `bonus` (bool, default `false`): Define a few extra unicode characters manually that can be done by hand (e.g. cube root as `\sqrt[3]`
 
 ## Future improvements
 - Add options for disabling certain sections of an alphabet if the font doesn't support it (e.g. relatively few blackboard bold fonts support lowercase) 
